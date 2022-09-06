@@ -1,12 +1,17 @@
-import Header from "./components/Header"
-import ViewButton from "./components/ViewButton"
+import Header from "./components/Header";
+import PeriodoCard from "./components/PeriodoCard";
 
 function App() {
   return (
     <>
-    <Header /> 
+      <Header />
+      <main>
+        <section id="cards">
+          <PeriodoCard />
+        </section>
+      </main>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
