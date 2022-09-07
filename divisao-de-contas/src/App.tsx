@@ -6,7 +6,7 @@ function App() {
     <>
       <Header />
       <main>
-        <section id="cards">
+        <section className="section-cards">
           <PeriodoCard />
         </section>
       </main>

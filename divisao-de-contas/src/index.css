@@ -12,6 +12,16 @@ body, html {
     color:#373737
 }
 
-#cards {
+li{
+    list-style: none;
+}
+
+.section-cards {
     padding: 40px 10px;
+}
+
+.cards {
+        background-color:#fff; 
+        border-radius: 10px;
+        padding: 30px;
 }
