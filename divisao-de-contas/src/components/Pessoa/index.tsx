@@ -22,15 +22,19 @@ function PessoaComponent() {
 
   function onSubmit(event: any) {
     event.preventDefault();
-    axios.post(`${BASE_URL}/pessoa`, pessoa);
+    axios.post(`${BASE_URL}/pessoa`, pessoa).then((response) => {
+      console.log(response);
+      setPessoa(pessoaInitialValue);
+    });
   }
 
   const [pessoas, setPessoas] = useState<Pessoa[]>([]);
+
   useEffect(() => {
     axios.get(`${BASE_URL}/pessoa`).then((pessoas) => {
       setPessoas(pessoas.data);
     });
-  }, []);
+  });
 
   return (
     <div className="periodos-container">
