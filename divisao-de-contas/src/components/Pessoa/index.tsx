@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Pessoa } from "../../entities/Pessoa";
 import axios from "axios";
 import { BASE_URL } from "../../utils/requests";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function PessoaComponent() {
   const pessoaInitialValue: Pessoa = {
@@ -14,27 +15,44 @@ function PessoaComponent() {
 
   function onChange(event: any) {
     const { name, value } = event.target;
-    console.log("nome: " + name + " valor: " + value);
-
     setPessoa({ ...pessoa, [name]: value });
-    console.log(pessoa);
   }
 
   function onSubmit(event: any) {
     event.preventDefault();
-    axios.post(`${BASE_URL}/pessoa`, pessoa).then((response) => {
+    cadastrarPessoa();
+  }
+
+  async function cadastrarPessoa() {
+    await axios.post(`${BASE_URL}/pessoa`, pessoa).then((response) => {
       console.log(response);
+      buscarPessoas();
       setPessoa(pessoaInitialValue);
     });
+  }
+
+  async function deletarPessoa(id: any) {
+    if (id) {
+      await axios
+        .delete(`${BASE_URL}/pessoa/${id}`)
+        .then((response) => {
+          console.log(response);
+        })
+        .then(() => buscarPessoas());
+    }
   }
 
   const [pessoas, setPessoas] = useState<Pessoa[]>([]);
 
   useEffect(() => {
-    axios.get(`${BASE_URL}/pessoa`).then((pessoas) => {
+    buscarPessoas();
+  }, []);
+
+  async function buscarPessoas() {
+    await axios.get(`${BASE_URL}/pessoa`).then((pessoas) => {
       setPessoas(pessoas.data);
     });
-  });
+  }
 
   return (
     <div className="periodos-container">
@@ -66,6 +84,19 @@ function PessoaComponent() {
                 <tr key={pessoa.id}>
                   <td>{pessoa.id}</td>
                   <td>{pessoa.nome}</td>
+                  <td>
+                    <Button variant="white" onClick={() => setPessoa(pessoa)}>
+                      <FontAwesomeIcon icon="eye" />
+                    </Button>
+                  </td>
+                  <td>
+                    <Button
+                      variant="white"
+                      onClick={() => deletarPessoa(pessoa.id)}
+                    >
+                      <FontAwesomeIcon icon="trash-can" />
+                    </Button>
+                  </td>
                 </tr>
               );
             })}
