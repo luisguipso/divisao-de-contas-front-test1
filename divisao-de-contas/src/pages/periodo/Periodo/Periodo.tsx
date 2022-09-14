@@ -1,13 +1,14 @@
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./styles.css";
-import arrowDown from "../../assets/arrow-down.png";
+import arrowDown from "../../../assets/arrow-down.png";
 import { useEffect, useState } from "react";
-import { Periodo } from "../../entities/Periodo";
-import { BASE_URL } from "../../utils/requests";
+import { Periodo } from "../../../entities/Periodo";
+import { BASE_URL } from "../../../utils/requests";
 import axios from "axios";
+import { Table } from "react-bootstrap";
 
-function PeriodoComponent() {
+export default function PeriodoComponent() {
   const hoje = new Date();
   const umAnoAtras = new Date(new Date().setDate(hoje.getDate() - 365));
 
@@ -54,7 +55,7 @@ function PeriodoComponent() {
           </div>
         </div>
         <div>
-          <table className="periodos-table">
+          <Table striped responsive>
             <thead>
               <tr>
                 <th>Periodo</th>
@@ -79,42 +80,34 @@ function PeriodoComponent() {
                     </td>
                   </tr>
                 );
-
-                function getMesFormatado(data: Date) {
-                  data = new Date(data);
-                  const monthNames = [
-                    "Janeiro",
-                    "Fevereiro",
-                    "Março",
-                    "Abril",
-                    "Maio",
-                    "Junho",
-                    "Julho",
-                    "Agosto",
-                    "Setembro",
-                    "Outubro",
-                    "Novembro",
-                    "Dezembro",
-                  ];
-                  return (
-                    monthNames[data.getMonth()] +
-                    "/" +
-                    data.getFullYear().toString()
-                  );
-                }
-                function getValorPeriodoFormatado(periodo: Periodo) {
-                  const valor = periodo.isFechado
-                    ? periodo.valorTotal
-                    : periodo.valorAtual;
-                  return valor.toFixed(2);
-                }
               })}
             </tbody>
-          </table>
+          </Table>
         </div>
       </div>
     </div>
   );
 }
 
-export default PeriodoComponent;
+function getMesFormatado(data: Date) {
+  data = new Date(data);
+  const monthNames = [
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro",
+  ];
+  return monthNames[data.getMonth()] + "/" + data.getFullYear().toString();
+}
+function getValorPeriodoFormatado(periodo: Periodo) {
+  const valor = periodo.isFechado ? periodo.valorTotal : periodo.valorAtual;
+  return valor.toFixed(2);
+}
