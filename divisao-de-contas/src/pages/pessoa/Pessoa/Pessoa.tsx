@@ -15,8 +15,12 @@ function PessoaComponent() {
   const [pessoas, setPessoas] = useState<Pessoa[]>([]);
 
   useEffect(() => {
-    buscarPessoas();
+    if (showModal == false) {
+      buscarPessoas();
+    }
   }, [showModal]);
+
+  console.log("Renderizou");
 
   function handleCloseModal() {
     setShowModal(false);
@@ -46,20 +50,23 @@ function PessoaComponent() {
 
   return (
     <>
-      <div className="periodos-container">
+      <div className="pages-container">
         <div className="cards">
-          <Button onClick={() => handleShowModal({})}>Cadastrar</Button>
+          <Button onClick={() => handleShowModal({ nome: "" })}>
+            Cadastrar
+          </Button>
           <Table striped responsive>
             <thead>
               <tr>
                 <th>Nome</th>
+                <th>Visualizar</th>
+                <th>Deletar</th>
               </tr>
             </thead>
             <tbody>
               {pessoas.map((pessoa) => {
                 return (
                   <tr key={pessoa.id}>
-                    <td>{pessoa.id}</td>
                     <td>{pessoa.nome}</td>
                     <td>
                       <ViewButton handle={() => handleShowModal(pessoa)} />
@@ -76,7 +83,7 @@ function PessoaComponent() {
         <div>
           <Modal show={showModal} onHide={handleCloseModal}>
             <Modal.Header closeButton>
-              <Modal.Title>Cadastro de Pessoas</Modal.Title>
+              <Modal.Title>Cadastro de pessoas</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <PessoaForm

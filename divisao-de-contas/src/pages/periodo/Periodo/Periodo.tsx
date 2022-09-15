@@ -29,7 +29,7 @@ export default function PeriodoComponent() {
   }, []);
 
   return (
-    <div className="periodos-container">
+    <div className="pages-container">
       <div className="cards">
         <h2 className="periodos-title">Periodos</h2>
         <div>

@@ -20,6 +20,12 @@ li{
     padding: 40px 10px;
 }
 
+.pages-container {  
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
 .cards {
         background-color:#fff; 
         border-radius: 10px;
