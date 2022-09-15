@@ -14,7 +14,7 @@ function App() {
       <NavBar />
       <main>
         <section className="section-cards">
-          <Categoria />
+          <PessoaComponent />
         </section>
       </main>
     </>

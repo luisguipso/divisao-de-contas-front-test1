@@ -3,16 +3,18 @@ import { useEffect, useState } from "react";
 import { Button, Modal, ModalBody, Table } from "react-bootstrap";
 import DeleteButton from "../../../components/DeleteButton/DeleteButton";
 import ViewButton from "../../../components/ViewButton/ViewButton";
+import useTableEntity from "../../../customHooks/useTableEntity";
 import { Categoria } from "../../../entities/Categoria";
 import { BASE_URL } from "../../../utils/requests";
 import CategoriaForm from "../CategoriaForm/CategoriaForm";
 
 export default function CategoriaConponent() {
+  const pagePath = "categoria";
   const [categoriaParaAlterar, setCategoriaParaAlterar] = useState<Categoria>();
   const { showModal, handleShowModal, handleCloseModal } = useModal(
     setCategoriaParaAlterar
   );
-  const { categorias, deletarCategoria } = useTable(showModal);
+  const { entities, deletarEntity } = useTableEntity(pagePath, showModal);
 
   console.log("Renderizou");
 
@@ -21,7 +23,7 @@ export default function CategoriaConponent() {
       <div className="cards">
         <Button onClick={() => handleShowModal({ nome: "" })}>Cadastrar</Button>
         {renderModal(showModal, handleCloseModal, categoriaParaAlterar)}
-        {renderTableCategoria(categorias, handleShowModal, deletarCategoria)}
+        {renderTableCategoria(entities, handleShowModal, deletarEntity)}
       </div>
     </div>
   );
@@ -64,33 +66,6 @@ function renderModal(
       </Modal>
     </div>
   );
-}
-
-function useTable(showModal: boolean) {
-  const [categorias, setCategorias] = useState<Categoria[]>([]);
-
-  useEffect(() => {
-    if (showModal == false) {
-      buscarCategorias();
-    }
-  }, [showModal]);
-
-  async function buscarCategorias() {
-    await axios
-      .get(`${BASE_URL}/categoria`)
-      .then((categorias) => setCategorias(categorias.data));
-  }
-
-  async function deletarCategoria(id: number) {
-    if (id) {
-      await axios
-        .delete(`${BASE_URL}/categoria/${id}`)
-        .then(() => buscarCategorias())
-        .catch((error) => alert(error));
-    }
-  }
-
-  return { categorias, deletarCategoria };
 }
 
 function renderTableCategoria(
