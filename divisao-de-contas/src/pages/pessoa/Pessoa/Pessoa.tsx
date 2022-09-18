@@ -2,100 +2,78 @@ import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import { useEffect, useState } from "react";
 import { Pessoa } from "../../../entities/Pessoa";
-import axios from "axios";
-import { BASE_URL } from "../../../utils/requests";
-import { Modal } from "react-bootstrap";
-import PessoaForm from "../PessoaForm/PessoaForm";
 import ViewButton from "../../../components/ViewButton/ViewButton";
 import DeleteButton from "../../../components/DeleteButton/DeleteButton";
+import useTableEntity from "../../../customHooks/useTableEntity";
+import useModalEntity from "../../../customHooks/useModalEntity";
+import renderModal from "../../../components/Modal/Modal";
+import PessoaForm from "../PessoaForm/PessoaForm";
 
-function PessoaComponent() {
-  const [showModal, setShowModal] = useState(false);
-  const [pessoaParaAlterar, setPessoaParaAlterar] = useState<Pessoa>();
-  const [pessoas, setPessoas] = useState<Pessoa[]>([]);
+export default function PessoaComponent() {
+  console.log("renderizou a pagina");
+  const pagePath = "pessoa";
+  const [pessoaParaAlterar, setPessoaParaAlterar] = useState<Pessoa>({});
+  const { showModal, handleShowModal, handleCloseModal } =
+    useModalEntity(setPessoaParaAlterar);
+  const {
+    entities: pessoas,
+    buscarEntities: buscarPessoas,
+    deletarEntity: deletarPessoa,
+  } = useTableEntity(pagePath);
 
   useEffect(() => {
-    if (showModal == false) {
+    console.log("chegou no useeffect, valor de showmodal: " + showModal);
+    if (showModal === false) {
       buscarPessoas();
     }
   }, [showModal]);
 
-  console.log("Renderizou");
-
-  function handleCloseModal() {
-    setShowModal(false);
-  }
-
-  function handleShowModal(pessoa: Pessoa) {
-    if (pessoa) {
-      setPessoaParaAlterar(pessoa);
-    }
-    setShowModal(true);
-  }
-
-  async function deletarPessoa(id: any) {
-    if (id) {
-      await axios
-        .delete(`${BASE_URL}/pessoa/${id}`)
-        .then(() => buscarPessoas())
-        .catch((error) => alert(error));
-    }
-  }
-
-  async function buscarPessoas() {
-    await axios
-      .get(`${BASE_URL}/pessoa`)
-      .then((pessoas) => setPessoas(pessoas.data));
-  }
-
   return (
-    <>
-      <div className="pages-container">
-        <div className="cards">
-          <Button onClick={() => handleShowModal({ nome: "" })}>
-            Cadastrar
-          </Button>
-          <Table striped responsive>
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Visualizar</th>
-                <th>Deletar</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pessoas.map((pessoa) => {
-                return (
-                  <tr key={pessoa.id}>
-                    <td>{pessoa.nome}</td>
-                    <td>
-                      <ViewButton handle={() => handleShowModal(pessoa)} />
-                    </td>
-                    <td>
-                      <DeleteButton handle={() => deletarPessoa(pessoa.id)} />
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </Table>
-        </div>
-        <div>
-          <Modal show={showModal} onHide={handleCloseModal}>
-            <Modal.Header closeButton>
-              <Modal.Title>Cadastro de pessoas</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <PessoaForm
-                showModal={setShowModal}
-                pessoaParam={pessoaParaAlterar}
-              />
-            </Modal.Body>
-          </Modal>
-        </div>
+    <div className="pages-container">
+      <div className="cards">
+        <Button onClick={() => handleShowModal({ nome: "" })}>Cadastrar</Button>
+        {renderTablePessoa(pessoas, handleShowModal, deletarPessoa)}
+        {renderModal(
+          "pessoas",
+          showModal,
+          handleCloseModal,
+          pessoaParaAlterar,
+          PessoaForm
+        )}
       </div>
-    </>
+    </div>
   );
 }
 
-export default PessoaComponent;
+function renderTablePessoa(
+  pessoas: Pessoa[],
+  handleShowModal: Function,
+  deletarPessoa: Function
+) {
+  return (
+    <Table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Visualizar</th>
+          <th>Excluir</th>
+        </tr>
+      </thead>
+      <tbody>
+        {pessoas.map((pessoa) => {
+          return (
+            <tr key={pessoa.id}>
+              <td>{pessoa.nome}</td>
+              <td>
+                <ViewButton handle={() => handleShowModal(pessoa)} />
+              </td>
+              <td>
+                <DeleteButton handle={() => deletarPessoa(pessoa.id)} />
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </Table>
+  );
+}

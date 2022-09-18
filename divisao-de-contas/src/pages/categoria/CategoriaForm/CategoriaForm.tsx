@@ -6,19 +6,19 @@ import { BASE_URL } from "../../../utils/requests";
 
 export default function categoriaForm({
   handleCloseModal,
-  categoriaParam,
+  entityParaAlterar,
 }: {
   handleCloseModal: any;
-  categoriaParam: Categoria;
+  entityParaAlterar: Categoria;
 }) {
-  const categoriaInitialValue: Categoria = categoriaParam
-    ? categoriaParam
+  console.log("renderizou o form categoria");
+  const categoriaInitialValue: Categoria = entityParaAlterar
+    ? entityParaAlterar
     : { nome: "" };
   const [categoria, setCategoria] = useState<Categoria>(categoriaInitialValue);
 
   function onChange(event: any) {
     const { name, value } = event.target;
-    console.log("name " + name + " value " + value);
     setCategoria({ ...categoria, [name]: value });
   }
 
@@ -28,14 +28,13 @@ export default function categoriaForm({
     handleCloseModal();
   }
 
-  async function cadastrarCategoria() {
-    await axios
+  function cadastrarCategoria() {
+    axios
       .post(`${BASE_URL}/categoria`, categoria)
       .then((response) => {
         console.log(response);
       })
       .catch((error) => {
-        console.log(error);
         alert(error);
       });
   }

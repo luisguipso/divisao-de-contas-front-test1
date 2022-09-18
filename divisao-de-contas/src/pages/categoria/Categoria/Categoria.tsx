@@ -1,69 +1,48 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Modal, ModalBody, Table } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import DeleteButton from "../../../components/DeleteButton/DeleteButton";
+import renderModal from "../../../components/Modal/Modal";
 import ViewButton from "../../../components/ViewButton/ViewButton";
+import useModalEntity from "../../../customHooks/useModalEntity";
 import useTableEntity from "../../../customHooks/useTableEntity";
 import { Categoria } from "../../../entities/Categoria";
-import { BASE_URL } from "../../../utils/requests";
 import CategoriaForm from "../CategoriaForm/CategoriaForm";
 
 export default function CategoriaConponent() {
+  console.log("renderizou a pagina categoria");
   const pagePath = "categoria";
-  const [categoriaParaAlterar, setCategoriaParaAlterar] = useState<Categoria>();
-  const { showModal, handleShowModal, handleCloseModal } = useModal(
+  const [categoriaParaAlterar, setCategoriaParaAlterar] = useState<Categoria>(
+    {}
+  );
+  const { showModal, handleShowModal, handleCloseModal } = useModalEntity(
     setCategoriaParaAlterar
   );
-  const { entities, deletarEntity } = useTableEntity(pagePath, showModal);
+  const {
+    entities: categorias,
+    buscarEntities: buscarCategorias,
+    deletarEntity: deletarCategoria,
+  } = useTableEntity(pagePath);
 
-  console.log("Renderizou");
+  useEffect(() => {
+    console.log("chegou no useeffect, valor de showmodal: " + showModal);
+    if (showModal === false) {
+      buscarCategorias();
+    }
+  }, [showModal]);
 
   return (
     <div className="pages-container">
       <div className="cards">
         <Button onClick={() => handleShowModal({ nome: "" })}>Cadastrar</Button>
-        {renderModal(showModal, handleCloseModal, categoriaParaAlterar)}
-        {renderTableCategoria(entities, handleShowModal, deletarEntity)}
+        {renderModal(
+          "categorias",
+          showModal,
+          handleCloseModal,
+          categoriaParaAlterar,
+          CategoriaForm
+        )}
+        {renderTableCategoria(categorias, handleShowModal, deletarCategoria)}
       </div>
-    </div>
-  );
-}
-
-function useModal(setCategoriaParaAlterar: any) {
-  const [showModal, setShowModal] = useState(false);
-
-  function handleShowModal(categoria: Categoria) {
-    if (categoria) {
-      setCategoriaParaAlterar(categoria);
-    }
-    setShowModal(true);
-  }
-
-  function handleCloseModal() {
-    setShowModal(false);
-  }
-
-  return { showModal, handleShowModal, handleCloseModal };
-}
-
-function renderModal(
-  showModal: boolean,
-  handleCloseModal: any,
-  categoria: any
-) {
-  return (
-    <div>
-      <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Cadastro de categorias</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <CategoriaForm
-            handleCloseModal={handleCloseModal}
-            categoriaParam={categoria}
-          />
-        </Modal.Body>
-      </Modal>
     </div>
   );
 }
@@ -78,6 +57,8 @@ function renderTableCategoria(
       <thead>
         <tr>
           <th>Categoria</th>
+          <th>Visualizar</th>
+          <th>Excluir</th>
         </tr>
       </thead>
       <tbody>

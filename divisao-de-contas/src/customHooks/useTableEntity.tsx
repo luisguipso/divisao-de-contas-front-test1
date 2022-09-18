@@ -1,21 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Categoria } from "../entities/Categoria";
 import { BASE_URL } from "../utils/requests";
 
-export default function useTableEntity(pagePath: string, showModal: boolean) {
+export default function useTableEntity(pagePath: string) {
   const [entities, setEntities] = useState<[]>([]);
-  console.log(pagePath);
-  useEffect(() => {
-    if (showModal == false) {
-      buscarEntities();
-    }
-  }, [showModal]);
 
-  async function buscarEntities() {
-    await axios
+  function buscarEntities() {
+    axios
       .get(`${BASE_URL}/${pagePath}`)
-      .then((categorias) => setEntities(categorias.data));
+      .then((entities) => setEntities(entities.data))
+      .catch((error) => alert(error));
   }
 
   async function deletarEntity(id: number) {
@@ -27,5 +21,5 @@ export default function useTableEntity(pagePath: string, showModal: boolean) {
     }
   }
 
-  return { entities, deletarEntity };
+  return { entities, buscarEntities, deletarEntity };
 }

@@ -3,17 +3,20 @@ import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { Pessoa } from "../../../entities/Pessoa";
 import { BASE_URL } from "../../../utils/requests";
-import React, { Dispatch, SetStateAction } from "react";
+
+const pessoaPath = "/pessoa";
 
 function PessoaForm({
-  showModal,
-  pessoaParam,
+  handleCloseModal,
+  entityParaAlterar,
 }: {
-  showModal: React.Dispatch<React.SetStateAction<boolean>>;
-  pessoaParam: any;
+  handleCloseModal: Function;
+  entityParaAlterar: any;
 }) {
-  const pessoaInitialValue: Pessoa = pessoaParam
-    ? pessoaParam
+  console.log("renderizou o form");
+
+  const pessoaInitialValue: Pessoa = entityParaAlterar
+    ? entityParaAlterar
     : {
         nome: "",
       };
@@ -22,13 +25,16 @@ function PessoaForm({
   function onSubmit(event: any) {
     event.preventDefault();
     cadastrarPessoa();
-    showModal(false);
+    handleCloseModal();
   }
 
-  async function cadastrarPessoa() {
-    await axios.post(`${BASE_URL}/pessoa`, pessoa).then((response) => {
-      console.log(response);
-    });
+  function cadastrarPessoa() {
+    axios
+      .post(`${BASE_URL}${pessoaPath}`, pessoa)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => alert(error));
   }
 
   function onChange(event: any) {
