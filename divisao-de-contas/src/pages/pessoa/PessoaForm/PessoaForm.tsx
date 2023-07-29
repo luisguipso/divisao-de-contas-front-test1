@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { Pessoa } from "../../../entities/Pessoa";
 import { BASE_URL } from "../../../utils/requests";
+import { PESSOA_PATH } from "../path";
 
 const pessoaPath = "/pessoa";
 
@@ -24,13 +25,14 @@ function PessoaForm({
 
   function onSubmit(event: any) {
     event.preventDefault();
-    cadastrarPessoa();
+    console.log(pessoa.nome);
+    salvarPessoa();
     handleCloseModal();
   }
 
-  function cadastrarPessoa() {
+  function salvarPessoa() {
     axios
-      .post(`${BASE_URL}${pessoaPath}`, pessoa)
+      .post(`${BASE_URL}${PESSOA_PATH}`, pessoa)
       .then((response) => {
         console.log(response);
       })

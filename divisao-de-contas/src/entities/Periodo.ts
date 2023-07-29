@@ -1,9 +1,12 @@
+import { Pessoa } from "./Pessoa";
+
 export type Periodo = {
-  id: number;
+  id?: number;
   mes: Date;
   inicio: Date;
-  fim: Date;
+  fim?: Date;
   valorAtual: number;
   isFechado: boolean;
-  valorTotal: number;
+  valorTotal?: number;
+  pagadores: Pessoa[];
 };

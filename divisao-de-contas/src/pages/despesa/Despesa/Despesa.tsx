@@ -33,6 +33,7 @@ function renderTableDespesas(despesas: Despesa[]) {
 function renderModalDespesa(despesa: any) {
   return <Modal></Modal>;
 }
+
 function useTableDespesas() {
   const [despesas, setDespesas] = useState<Despesa[]>([]);
   const [despesaParaAlterar, setDespesaParaAlterar] = useState<Despesa>();

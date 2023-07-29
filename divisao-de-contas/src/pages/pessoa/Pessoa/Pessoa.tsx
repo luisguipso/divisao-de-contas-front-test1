@@ -4,22 +4,25 @@ import { useEffect, useState } from "react";
 import { Pessoa } from "../../../entities/Pessoa";
 import ViewButton from "../../../components/ViewButton/ViewButton";
 import DeleteButton from "../../../components/DeleteButton/DeleteButton";
-import useTableEntity from "../../../customHooks/useTableEntity";
+import useEntity from "../../../customHooks/useEntity";
 import useModalEntity from "../../../customHooks/useModalEntity";
 import renderModal from "../../../components/Modal/Modal";
 import PessoaForm from "../PessoaForm/PessoaForm";
 
+const novaPessoa: Pessoa = { nome: "" };
+
 export default function PessoaComponent() {
   console.log("renderizou a pagina");
-  const pagePath = "pessoa";
-  const [pessoaParaAlterar, setPessoaParaAlterar] = useState<Pessoa>({});
+  const pagePath = "/pessoa";
+  const [pessoaParaAlterar, setPessoaParaAlterar] =
+    useState<Pessoa>(novaPessoa);
   const { showModal, handleShowModal, handleCloseModal } =
     useModalEntity(setPessoaParaAlterar);
   const {
     entities: pessoas,
     buscarEntities: buscarPessoas,
     deletarEntity: deletarPessoa,
-  } = useTableEntity(pagePath);
+  } = useEntity(pagePath);
 
   useEffect(() => {
     console.log("chegou no useeffect, valor de showmodal: " + showModal);
@@ -31,7 +34,7 @@ export default function PessoaComponent() {
   return (
     <div className="pages-container">
       <div className="cards">
-        <Button onClick={() => handleShowModal({ nome: "" })}>Cadastrar</Button>
+        <Button onClick={() => handleShowModal(novaPessoa)}>Cadastrar</Button>
         {renderTablePessoa(pessoas, handleShowModal, deletarPessoa)}
         {renderModal(
           "pessoas",

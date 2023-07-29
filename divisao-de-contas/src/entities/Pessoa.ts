@@ -1,4 +1,4 @@
 export type Pessoa = {
   id?: number;
-  nome?: string;
+  nome: string;
 };

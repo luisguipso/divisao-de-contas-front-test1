@@ -4,16 +4,17 @@ import DeleteButton from "../../../components/DeleteButton/DeleteButton";
 import renderModal from "../../../components/Modal/Modal";
 import ViewButton from "../../../components/ViewButton/ViewButton";
 import useModalEntity from "../../../customHooks/useModalEntity";
-import useTableEntity from "../../../customHooks/useTableEntity";
+import useEntity from "../../../customHooks/useEntity";
 import { Categoria } from "../../../entities/Categoria";
 import CategoriaForm from "../CategoriaForm/CategoriaForm";
 
+const novaCategoria: Categoria = { nome: "" };
+
 export default function CategoriaConponent() {
   console.log("renderizou a pagina categoria");
-  const pagePath = "categoria";
-  const [categoriaParaAlterar, setCategoriaParaAlterar] = useState<Categoria>(
-    {}
-  );
+  const pagePath = "/categoria";
+  const [categoriaParaAlterar, setCategoriaParaAlterar] =
+    useState<Categoria>(novaCategoria);
   const { showModal, handleShowModal, handleCloseModal } = useModalEntity(
     setCategoriaParaAlterar
   );
@@ -21,7 +22,7 @@ export default function CategoriaConponent() {
     entities: categorias,
     buscarEntities: buscarCategorias,
     deletarEntity: deletarCategoria,
-  } = useTableEntity(pagePath);
+  } = useEntity(pagePath);
 
   useEffect(() => {
     console.log("chegou no useeffect, valor de showmodal: " + showModal);
@@ -33,7 +34,9 @@ export default function CategoriaConponent() {
   return (
     <div className="pages-container">
       <div className="cards">
-        <Button onClick={() => handleShowModal({ nome: "" })}>Cadastrar</Button>
+        <Button onClick={() => handleShowModal(novaCategoria)}>
+          Cadastrar
+        </Button>
         {renderModal(
           "categorias",
           showModal,
